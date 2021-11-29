@@ -29,6 +29,7 @@ using namespace std;
 #define max_evaluate_idx 59049
 #define inf 1000000
 #define b_idx_num 38
+#define random_ratio 0.05
 
 #define book_hash_table_size 8192
 constexpr int book_hash_mask = book_hash_table_size - 1;
@@ -1487,6 +1488,7 @@ int mtd_final(const board *b, const long long strt, bool skipped, int depth, int
 
 inline search_result search(const board b, long long strt, int max_depth){
     vector<board> nb;
+    search_result res;
     int i;
     for (const int &cell: vacant_lst){
         for (i = 0; i < 4; ++i){
@@ -1500,6 +1502,13 @@ inline search_result search(const board b, long long strt, int max_depth){
         }
     }
     cerr << endl;
+    if (myrandom() < random_ratio){
+        res.policy = nb[myrandrange(0, (int)nb.size())].policy;
+        res.value = -100000;
+        res.depth = -1;
+        res.nps = 0;
+        return res;
+    }
     int canput = nb.size();
     cerr << "canput: " << canput << endl;
     int res_depth;
@@ -1553,7 +1562,6 @@ inline search_result search(const board b, long long strt, int max_depth){
         res_depth = depth + 1;
         cerr << "depth: " << depth + 1 << " time: " << tim() - strt << " policy: " << policy << " value: " << alpha << " nodes: " << searched_nodes << " nps: " << (long long)searched_nodes * 1000 / max(1LL, tim() - strt) << " get: " << hash_get << " reg: " << hash_reg << endl;
     }
-    search_result res;
     res.policy = policy;
     res.value = value;
     res.depth = res_depth;
@@ -1563,6 +1571,7 @@ inline search_result search(const board b, long long strt, int max_depth){
 
 inline search_result final_search(const board b, long long strt){
     vector<board> nb;
+    search_result res;
     int i;
     for (const int &cell: vacant_lst){
         for (i = 0; i < 4; ++i){
@@ -1576,6 +1585,13 @@ inline search_result final_search(const board b, long long strt){
         }
     }
     cerr << endl;
+    if (myrandom() < random_ratio){
+        res.policy = nb[myrandrange(0, (int)nb.size())].policy;
+        res.value = -100000;
+        res.depth = -1;
+        res.nps = 0;
+        return res;
+    }
     int canput = nb.size();
     cerr << "canput: " << canput << endl;
     int policy = -1;
@@ -1620,7 +1636,6 @@ inline search_result final_search(const board b, long long strt){
     policy = tmp_policy;
     value = alpha;
     cerr << "final depth: " << max_depth << " time: " << tim() - strt << " policy: " << policy << " value: " << alpha << " nodes: " << searched_nodes << " nps: " << (long long)searched_nodes * 1000 / max(1LL, tim() - strt) << " get: " << hash_get << " reg: " << hash_reg << endl;
-    search_result res;
     res.policy = policy;
     res.value = value;
     res.depth = max_depth;

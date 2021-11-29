@@ -11,7 +11,7 @@ offset_x = 10
 rect_size = 60
 circle_offset = 3
 
-ai_exe = subprocess.Popen('./egaroucid.exe'.split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+ai_exe = subprocess.Popen('./egaroucid.exe'.split(), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
 ai_player = 0
 depth = 10
@@ -48,7 +48,7 @@ stone_label.place(x=250, y=600, anchor=tkinter.CENTER)
 val_str = tkinter.StringVar()
 val_str.set('0')
 val_label = tkinter.Label(canvas, textvariable=val_str, font=('', 20))
-val_label.place(x=10, y=650)
+#val_label.place(x=10, y=650)
 
 def start():
     global o, record, vals, ai_player
@@ -64,7 +64,7 @@ start_button.place(x=600, y=10)
 
 def end_game():
     with open('records.csv', 'a') as f:
-        f.write(str(datetime.datetime.now()) + ',' + ('0' if ai_player == 1 else '1') + ',' + str(depth) + ',' + str(final_depth) + ',' + str(o.n_stones[0]) + ',' + str(o.n_stones[1]) + ',' + record)
+        f.write(str(datetime.datetime.now()) + ',' + ('0' if ai_player == 1 else '1') + ',' + str(depth) + ',' + str(final_depth) + ',' + str(o.n_stones[1 - ai_player] - o.n_stones[ai_player]) + ',' + str(o.n_stones[0]) + ',' + str(o.n_stones[1]) + ',' + record)
         for elem in vals:
             f.write(',' + str(elem))
         f.write('\n')
