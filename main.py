@@ -63,8 +63,13 @@ start_button = tkinter.Button(canvas, text='対局開始', command=start)
 start_button.place(x=600, y=10)
 
 def end_game():
+    result = o.n_stones[1 - ai_player] - o.n_stones[ai_player]
+    if result > 0:
+        result += hw2 - sum(o.n_stones)
+    elif result < 0:
+        result -= hw2 - sum(o.n_stones)
     with open('records.csv', 'a') as f:
-        f.write(str(datetime.datetime.now()) + ',' + ('0' if ai_player == 1 else '1') + ',' + str(depth) + ',' + str(final_depth) + ',' + str(o.n_stones[1 - ai_player] - o.n_stones[ai_player]) + ',' + str(o.n_stones[0]) + ',' + str(o.n_stones[1]) + ',' + record)
+        f.write(str(datetime.datetime.now()) + ',' + ('0' if ai_player == 1 else '1') + ',' + str(depth) + ',' + str(final_depth) + ',' + str(result) + ',' + str(o.n_stones[0]) + ',' + str(o.n_stones[1]) + ',' + record)
         for elem in vals:
             f.write(',' + str(elem))
         f.write('\n')
